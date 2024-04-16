@@ -76,7 +76,6 @@ function NeotestJavaAdapter.build_spec(args)
 	local self = NeotestJavaAdapter
 
 	local spec = spec_builder.build_spec(args, self.project_type, self.config.ignore_wrapper, self.config)
-
 	return spec
 end
 
