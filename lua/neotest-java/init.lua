@@ -32,6 +32,10 @@ NeotestJavaAdapter = {
 	config = {
 		ignore_wrapper = false,
 		junit_jar = vim.fn.stdpath("data") .. "/neotest-java/junit-platform-console-standalone-1.10.1.jar",
+		command = "./gradlew test",
+		cwd = function()
+			return vim.fn.getcwd()
+		end,
 	},
 }
 
@@ -73,24 +77,11 @@ end
 ---@return nil | neotest.RunSpec | neotest.RunSpec[]
 function NeotestJavaAdapter.build_spec(args)
 	local self = NeotestJavaAdapter
-	check_junit_jar(self.config.junit_jar)
 
-	-- TODO: find a way to avoid to make this steps every time
+	local spec = spec_builder.build_spec(args, self.project_type, self.config.ignore_wrapper, self.config)
 
-	-- find root
-	local root = self.root(args.tree:data().path)
-
-	-- detect project type
-	self.project_type = detect_project_type(root)
-
-	-- decide to ignore wrapper or not
-	local ignore_wrapper = self.config.ignore_wrapper
-	if not ignore_wrapper then
-		ignore_wrapper = not there_is_wrapper_in(root)
-	end
-
-	-- build spec
-	return spec_builder.build_spec(args, self.project_type, ignore_wrapper, self.config)
+	print(vim.inspect(spec))
+	return spec
 end
 
 ---@async
