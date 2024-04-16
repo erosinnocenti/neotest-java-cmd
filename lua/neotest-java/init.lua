@@ -33,9 +33,6 @@ NeotestJavaAdapter = {
 		ignore_wrapper = false,
 		junit_jar = vim.fn.stdpath("data") .. "/neotest-java/junit-platform-console-standalone-1.10.1.jar",
 		command = "./gradlew test",
-		cwd = function()
-			return vim.fn.getcwd()
-		end,
 	},
 }
 
@@ -80,7 +77,9 @@ function NeotestJavaAdapter.build_spec(args)
 
 	local spec = spec_builder.build_spec(args, self.project_type, self.config.ignore_wrapper, self.config)
 
-	print(vim.inspect(spec))
+	error(vim.inspect(args))
+	error(vim.inspect(spec))
+
 	return spec
 end
 
