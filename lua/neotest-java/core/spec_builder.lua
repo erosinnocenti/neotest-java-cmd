@@ -41,8 +41,10 @@ function SpecBuilder.build_spec(args, project_type, ignore_wrapper, config)
 	-- -- note: parameterized tests are not being discovered by the junit standalone, so we run tests per file
 	-- command:test_reference(resolve_qualfied_name(absolute_path), position.name, "file")
 
+	local cmd = config.command .. ' --tests "*.' .. position.name .. '"'
+	
 	return {
-		command = config.command .. " --tests *." .. position.name,
+		command = cmd
 		cwd = root,
 		symbol = position.name,
 		context = { },
