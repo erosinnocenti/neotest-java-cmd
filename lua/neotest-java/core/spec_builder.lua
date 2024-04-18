@@ -45,19 +45,12 @@ function SpecBuilder.build_spec(args, project_type, ignore_wrapper, config)
 	-- -- note: parameterized tests are not being discovered by the junit standalone, so we run tests per file
 	-- command:test_reference(resolve_qualfied_name(absolute_path), position.name, "file")
 
-<<<<<<< HEAD
 	local cmd = 'cd "' .. root .. '" && unbuffer ./gradlew test --rerun-tasks --tests "*.' .. position.name .. '" |tee "' .. reports_dir .. '/gradle-output.log"'
 
 	print("Command " .. cmd)
 
 	return {
 		command = cmd,
-=======
-	local cmd = config.command .. ' --tests "*.' .. position.name .. '"'
-	
-	return {
-		command = cmd
->>>>>>> 955bf827065c2ccf27185e9ad60c82d4081a8445
 		cwd = root,
 		symbol = position.name,
 		context = { report_file = reports_dir .. "/gradle-output.log" },
