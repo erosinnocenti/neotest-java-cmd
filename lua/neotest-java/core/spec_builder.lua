@@ -1,4 +1,5 @@
 local root_finder = require("neotest-java.core.root_finder")
+local run = require("neotest-java.command.run")
 local CommandBuilder = require("neotest-java.command.junit_command_builder")
 local resolve_qualfied_name = require("neotest-java.util.resolve_qualified_name")
 
@@ -11,11 +12,14 @@ function SpecBuilder.build_spec(args, project_type, ignore_wrapper, config)
 	-- local command = CommandBuilder:new(config, project_type)
 	local position = args.tree:data()
 	local root = root_finder.find_root(position.path)
-	-- local absolute_path = position.path
-	--
-	-- command:set_test_file(absolute_path)
-	--
-	-- local reports_dir = "/tmp/neotest-java/" .. vim.fn.strftime("%d%m%y%H%M%S")
+
+	print("Position path: " .. position.path)
+	print("Root path: " .. root)
+
+	local reports_dir = "/tmp/neotest-java/" .. vim.fn.strftime("%d%m%y%H%M%S")
+
+	run("mkdir -p " .. reports_dir)
+
 	-- command:reports_dir(reports_dir)
 	--
 	-- if position.type == "dir" then
@@ -41,11 +45,15 @@ function SpecBuilder.build_spec(args, project_type, ignore_wrapper, config)
 	-- -- note: parameterized tests are not being discovered by the junit standalone, so we run tests per file
 	-- command:test_reference(resolve_qualfied_name(absolute_path), position.name, "file")
 
+	local cmd = 'cd "' .. root .. '" && unbuffer ./gradlew test --rerun-tasks --tests "*.' .. position.name .. '" |tee "' .. reports_dir .. '/gradle-output.log"'
+
+	print("Command " .. cmd)
+
 	return {
-		command = config.command .. " --tests *." .. position.name,
+		command = cmd,
 		cwd = root,
 		symbol = position.name,
-		context = { },
+		context = { report_file = reports_dir .. "/gradle-output.log" },
 	}
 end
 
